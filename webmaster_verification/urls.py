@@ -6,7 +6,6 @@ from .views import BingVerificationView
 from .views import MajesticVerificationView
 from .views import YandexVerificationView
 from .views import AlexaVerificationView
-from .views import RobotsView
 
 
 urlpatterns = patterns('',
