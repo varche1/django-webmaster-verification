@@ -125,4 +125,3 @@ if __name__ == '__main__':
                         help='run the multicode tests')
     options = parser.parse_args()
     QuickDjangoTest(options)
-

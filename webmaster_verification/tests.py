@@ -158,7 +158,7 @@ class WebmasterVerificationTest(TestCase):
 
     # TODO look into refactoring this
     def _get_yandex_url(self, code):
-        return '/yandex_%s.txt' % code
+        return '/yandex_%s.html' % code
 
     # TODO look into refactoring this
     def test_alexa_file_acces(self):
