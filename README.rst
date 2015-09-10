@@ -16,8 +16,8 @@ Supported services:
 - `Majestic SEO <https://www.majesticseo.com>`_
 - `Alexa <http://www.alexa.com>`_
 
-.. image:: https://api.travis-ci.org/nkuttler/django-webmaster-verification.png
-  :target: https://travis-ci.org/nkuttler/django-webmaster-verification
+.. image:: https://api.travis-ci.org/whyflyru/django-webmaster-verification.png
+  :target: https://travis-ci.org/whyflyru/django-webmaster-verification
 
 Usage
 =====
