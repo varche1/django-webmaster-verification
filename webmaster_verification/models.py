@@ -8,18 +8,18 @@ from django.utils.translation import ugettext_lazy as _
 
 @python_2_unicode_compatible
 class Verification(models.Model):
-    GOOGLE = 1
-    BING = 2
-    YANDEX = 3
-    MAJESTIC = 4
-    ALEXA = 5
+    PROVIDER_GOOGLE = 1
+    PROVIDER_BING = 2
+    PROVIDER_YANDEX = 3
+    PROVIDER_MAJESTIC = 4
+    PROVIDER_ALEXA = 5
 
     PROVIDERS = (
-        (GOOGLE, 'Google'),
-        (BING, 'Bing'),
-        (YANDEX, 'Yandex'),
-        (MAJESTIC, 'Majestic'),
-        (ALEXA, 'Alexa'),
+        (PROVIDER_GOOGLE, 'Google'),
+        (PROVIDER_BING, 'Bing'),
+        (PROVIDER_YANDEX, 'Yandex'),
+        (PROVIDER_MAJESTIC, 'Majestic'),
+        (PROVIDER_ALEXA, 'Alexa'),
     )
 
     code = models.CharField(_('Code'), max_length=250)

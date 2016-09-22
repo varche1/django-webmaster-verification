@@ -1,24 +1,13 @@
 import logging
-logger = logging.getLogger(__name__)
 
 from django.conf import settings
 from django.http import Http404
 from django.views.generic import TemplateView
 
+from .models import Verification
 
-class FileAccessMixin(object):
-    """
-    Make sure the code for the accessed file is configured. We don't want to add
-    billions of files to sites. This is necessary for foo-<code> like filenames.
-    """
-    def get(self, request, *args, **kwargs):
-        try:
-            if self.kwargs['code'] not in settings.WEBMASTER_VERIFICATION[self.provider] \
-                and self.kwargs['code'] != settings.WEBMASTER_VERIFICATION[self.provider]:
-                raise Http404
-        except KeyError:
-            raise Http404
-        return super(FileAccessMixin, self).get(request, *args, **kwargs)
+
+logger = logging.getLogger(__name__)
 
 
 class MimeTextMixin(object):
@@ -50,44 +39,50 @@ class VerificationView(TemplateView):
     This adds the verification key to the template context and makes sure we
     return a 404 if no key was set for the provider.
     """
-    def get_context_data(self, **kwargs):
+    provider = None
+
+    def get_context_data(self, code, **kwargs):
         context = super(VerificationView, self).get_context_data(**kwargs)
+        use_subdomains = getattr(settings, 'WEBMASTER_VERIFICATION_USE_SUBDOMAINS', False)
         try:
-            codes = settings.WEBMASTER_VERIFICATION[self.provider]
-            if 'code' in self.kwargs:
-                if self.kwargs['code'] in codes or self.kwargs['code'] == codes:
-                    code = self.kwargs['code']
+            if use_subdomains:
+                verification = Verification.objects.get(
+                    provider=self.provider,
+                    code=code,
+                    subdomain=getattr(self.request, 'subdomain', '')
+                )
             else:
-                code = codes
-            context['%s_verification' % self.provider] = code
-        except KeyError:
+                verification = Verification.objects.get(
+                    provider=self.provider,
+                    code=code
+                )
+        except Verification.DoesNotExist:
             raise Http404
-        except AttributeError:
-            logger.info("WEBMASTER_VERIFICATION not defined in settings")
-            raise Http404
+        provider_name = verification.get_provider_display().lower()
+        context['%s_verification' % provider_name] = verification.code
         return context
 
 
-class GoogleVerificationView(FileAccessMixin, VerificationView):
+class GoogleVerificationView(VerificationView):
     template_name = 'webmaster_verification/google_verify_template.html'
-    provider = 'google'
+    provider = Verification.PROVIDER_GOOGLE
 
 
 class BingVerificationView(MimeXMLMixin, VerificationView):
     template_name = 'webmaster_verification/bing_verify_template.xml'
-    provider = 'bing'
+    provider = Verification.PROVIDER_BING
 
 
-class MajesticVerificationView(MimeTextMixin, FileAccessMixin, VerificationView):
+class MajesticVerificationView(MimeTextMixin, VerificationView):
     template_name = 'webmaster_verification/majestic_verify_template.txt'
-    provider = 'majestic'
+    provider = Verification.PROVIDER_MAJESTIC
 
 
-class YandexVerificationView(MimeTextMixin, FileAccessMixin, VerificationView):
+class YandexVerificationView(MimeTextMixin, VerificationView):
     template_name = 'webmaster_verification/yandex_verify_template.txt'
-    provider = 'yandex'
+    provider = Verification.PROVIDER_YANDEX
 
 
-class AlexaVerificationView(FileAccessMixin, VerificationView):
+class AlexaVerificationView(VerificationView):
     template_name = 'webmaster_verification/alexa_verify_template.html'
-    provider = 'alexa'
+    provider = Verification.PROVIDER_ALEXA
