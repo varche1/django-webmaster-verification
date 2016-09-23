@@ -33,7 +33,7 @@ setup(
     ],
     zip_safe = True,
     package_data={
-        'webmaster_verification', [
+        'webmaster_verification': [
             'templates/webmaster_verification/*.html',
             'locale/*/*/*.mo',
             'locale/*/*/*.po',
