@@ -53,9 +53,6 @@ Add verification data in your admin interface.
 Notes
 -----
 
-Python 2.6 users will have to install argparse and importlib manually. I'm
-too lazy to add that logic to the setup script right now.
-
 As **Bing** always accesses the same verification file I'm not sure if it's
 possible to support more than one code for it. Please let me know if yes, and
 how, as I don't really use their tools.
@@ -71,6 +68,7 @@ Changelog
 ------------------
 - Store verification codes in database
 - Add support of subdomains
+- Drop support of Python 2.6 and Django 1.4
 
 0.2.4 (2015-02-26)
 ------------------

@@ -21,7 +21,6 @@ setup(
         "Programming Language :: Python",
         "Framework :: Django",
         "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.2",
@@ -29,7 +28,7 @@ setup(
         "Programming Language :: Python :: 3.4",
     ],
     install_requires = [
-        "Django >= 1.4",
+        "Django >= 1.6",
     ],
     zip_safe = True,
     package_data={
