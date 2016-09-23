@@ -42,40 +42,13 @@ Add ``webmaster_verification`` to your root urlconf (urls.py)::
         ...,
     )
 
-Add settings just as::
+Add optional settings::
 
-    WEBMASTER_VERIFICATION = {
-        'bing': '<bing verification code>',
-        'google': '<google verification code>',
-        'majestic': '<majestic verification code>',
-        'yandex': '<yandex verification code>',
-        'alexa': '<alexa verification code>',
-    }
+    WEBMASTER_VERIFICATION_USE_SUBDOMAINS = True  # enable subdomains support (disabled by default)
+    WEBMASTER_VERIFICATION_USE_CACHE = True  # enable cache (disabled by default)
+    WEBMASTER_VERIFICATION_CACHE_LIFETIME = 360  # cache life time in seconds (default - 5 minutes)
 
-The codes are alphanumeric and don't include suffixes like 'html', e.g.
-``847e1f379a99c28a`` for google, not ``847e1f379a99c28a.html``.
-
-Multiple codes are supported as well, except for bing::
-
-    WEBMASTER_VERIFICATION = {
-        'bing': '<bing verification code>',
-        'google': (
-                '<google verification code 1>',
-                '<google verification code 2>',
-        ),
-        'majestic': (
-                '<majestic verification code 1>',
-                '<majestic verification code 2>',
-        ),
-        'yandex': (
-                '<yandex verification code 1>',
-                '<yandex verification code 2>',
-        ),
-        'alexa': (
-                '<alexa verification code 1>',
-                '<alexa verification code 2>',
-        ),
-    }
+Add verification data in your admin interface.
 
 Notes
 -----
@@ -87,15 +60,17 @@ As **Bing** always accesses the same verification file I'm not sure if it's
 possible to support more than one code for it. Please let me know if yes, and
 how, as I don't really use their tools.
 
-For **Yandex** only the `.txt` file method is supported, but adding support for
-`.html` should be trivial if you need it.
-
 The **Alexa** codes I saw all had a length of 27 characters, so that's what this
 app assumes is used. Please let me know if your codes differ and I need to
 modify the app.
 
 Changelog
 =========
+
+0.3wf (2016-09-23)
+------------------
+- Store verification codes in database
+- Add support of subdomains
 
 0.2.4 (2015-02-26)
 ------------------
