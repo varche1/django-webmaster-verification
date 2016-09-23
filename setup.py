@@ -29,7 +29,7 @@ setup(
         "Programming Language :: Python :: 3.4",
     ],
     install_requires = [
-        "Django >= 1.4",
+        "Django >= 1.6",
     ],
     zip_safe = True,
     package_data={

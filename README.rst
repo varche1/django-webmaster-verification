@@ -71,6 +71,7 @@ Changelog
 ------------------
 - Store verification codes in database
 - Add support of subdomains
+- Drop support of Django 1.4
 
 0.2.4 (2015-02-26)
 ------------------
