@@ -5,9 +5,10 @@ from django.http import Http404
 from django.test import TestCase
 from django.test.client import Client, RequestFactory
 from django.test.utils import override_settings
+from django.utils import timezone
 
 from .models import Verification
-from .views import YandexVerificationView
+from .views import YandexVerificationView, GoogleVerificationView
 
 
 class WebmasterVerificationTest(TestCase):
@@ -201,6 +202,53 @@ class WebmasterVerificationTest(TestCase):
         request.subdomain = 'msk'
         setattr(request, 'subdomain', 'msk')
         response = do_request()
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Couldn't access %s, got %d" % (url, response.status_code)
+        )
+
+    @override_settings(WEBMASTER_VERIFICATION_USE_CACHE=True)
+    def test_cache(self):
+        code = '0123456789abcdef'
+        verification = Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_GOOGLE,
+            subdomain=''
+        )
+        url = self._get_google_url(code)
+        request_factory = RequestFactory()
+        request = request_factory.get(url)
+        view_instance = GoogleVerificationView()
+        view = GoogleVerificationView.as_view()
+
+        # getting from database, cache value
+        response = view(request, code=code)
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Couldn't access %s, got %d" % (url, response.status_code)
+        )
+        response = response.render()
+        self.assertIn(code, response.content)
+        cache_key = 'google_%s' % code
+        self.assertIn(cache_key, view_instance._cache)
+        self.assertIn('code', view_instance._cache[cache_key])
+        self.assertIn('expire', view_instance._cache[cache_key])
+        self.assertEqual(view_instance._cache[cache_key]['code'], code)
+
+        # getting from cache
+        changed_code = 'abcdef0123456789'
+        verification.code = changed_code
+        verification.save()
+        response = view(request, code=code)
+        response = response.render()
+        self.assertIn(code, response.content)
+
+        # cache was expired
+        view_instance._cache[cache_key]['expire'] = timezone.datetime.now() - timezone.timedelta(minutes=7)
+        self.assertRaises(Http404, view, request, code=code)
+        response = view(request, code=changed_code)
         self.assertEqual(
             response.status_code,
             200,
