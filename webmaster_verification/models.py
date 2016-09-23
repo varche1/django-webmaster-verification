@@ -24,7 +24,7 @@ class Verification(models.Model):
 
     code = models.CharField(_('Code'), max_length=250)
     provider = models.SmallIntegerField(_('Provider'), choices=PROVIDERS)
-    subdomain = models.CharField(_('Subdomain'), max_length=250, blank=True, null=True)
+    subdomain = models.CharField(_('Subdomain'), max_length=250, blank=True, null=True, default='')
 
     def __str__(self):
         return '%s: %s' % (self.get_provider_display(), self.code)

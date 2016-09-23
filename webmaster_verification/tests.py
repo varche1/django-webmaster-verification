@@ -22,8 +22,7 @@ class WebmasterVerificationTest(TestCase):
         code = '0123456789abcdef'
         Verification.objects.create(
             code=code,
-            provider=Verification.PROVIDER_GOOGLE,
-            subdomain=''
+            provider=Verification.PROVIDER_GOOGLE
         )
         url = self._get_google_url(code)
         response = self.client.get(url)
@@ -55,8 +54,7 @@ class WebmasterVerificationTest(TestCase):
         code = 'FFFFFFFFFFFFFFFF'
         Verification.objects.create(
             code=code,
-            provider=Verification.PROVIDER_BING,
-            subdomain=''
+            provider=Verification.PROVIDER_BING
         )
         url = '/BingSiteAuth.xml'
         response = self.client.get(url)
@@ -83,8 +81,7 @@ class WebmasterVerificationTest(TestCase):
         code = '0123456789abcdef'
         Verification.objects.create(
             code=code,
-            provider=Verification.PROVIDER_YANDEX,
-            subdomain=''
+            provider=Verification.PROVIDER_YANDEX
         )
         url = self._get_yandex_url(code)
         response = self.client.get(url)
@@ -120,8 +117,7 @@ class WebmasterVerificationTest(TestCase):
         code = 'AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAF'
         Verification.objects.create(
             code=code,
-            provider=Verification.PROVIDER_MAJESTIC,
-            subdomain=''
+            provider=Verification.PROVIDER_MAJESTIC
         )
         url = self._get_mj_url(code)
         response = self.client.get(url)
@@ -157,8 +153,7 @@ class WebmasterVerificationTest(TestCase):
         code = '1234567890abcdefABCDEF12345'
         Verification.objects.create(
             code=code,
-            provider=Verification.PROVIDER_ALEXA,
-            subdomain=''
+            provider=Verification.PROVIDER_ALEXA
         )
         url = self._get_alexa_url(code)
         response = self.client.get(url)
@@ -213,8 +208,7 @@ class WebmasterVerificationTest(TestCase):
         code = '0123456789abcdef'
         verification = Verification.objects.create(
             code=code,
-            provider=Verification.PROVIDER_GOOGLE,
-            subdomain=''
+            provider=Verification.PROVIDER_GOOGLE
         )
         url = self._get_google_url(code)
         request_factory = RequestFactory()
