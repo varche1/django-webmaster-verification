@@ -27,6 +27,8 @@ class QuickDjangoTest(object):
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.admin',
+
+        'webmaster_verification'
     )
     WEBMASTER_VERIFICATION = {}
 
@@ -51,7 +53,7 @@ class QuickDjangoTest(object):
                     'PORT': '',
                 }
             },
-            INSTALLED_APPS = self.INSTALLED_APPS + tuple(self.apps),
+            INSTALLED_APPS = self.INSTALLED_APPS,
             WEBMASTER_VERIFICATION = self._get_wv_config(),
             ROOT_URLCONF = 'test_project.urls',
             TEMPLATE_DIRS = (
