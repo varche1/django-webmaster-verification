@@ -224,7 +224,7 @@ class WebmasterVerificationTest(TestCase):
             "Couldn't access %s, got %d" % (url, response.status_code)
         )
         response = response.render()
-        self.assertIn(code, response.content)
+        self.assertIn(code, response.content.decode('utf-8'))
         cache_key = 'google_%s' % code
         self.assertIn(cache_key, view_instance._cache)
         self.assertIn('code', view_instance._cache[cache_key])
@@ -237,7 +237,7 @@ class WebmasterVerificationTest(TestCase):
         verification.save()
         response = view(request, code=code)
         response = response.render()
-        self.assertIn(code, response.content)
+        self.assertIn(code, response.content.decode('utf-8'))
 
         # cache was expired
         view_instance._cache[cache_key]['expire'] = timezone.datetime.now() - timezone.timedelta(minutes=7)
