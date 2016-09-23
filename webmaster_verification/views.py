@@ -41,22 +41,19 @@ class VerificationView(TemplateView):
     """
     provider = None
 
-    def get_context_data(self, code, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super(VerificationView, self).get_context_data(**kwargs)
         use_subdomains = getattr(settings, 'WEBMASTER_VERIFICATION_USE_SUBDOMAINS', False)
-        try:
-            if use_subdomains:
-                verification = Verification.objects.get(
-                    provider=self.provider,
-                    code=code,
-                    subdomain=getattr(self.request, 'subdomain', '')
-                )
-            else:
-                verification = Verification.objects.get(
-                    provider=self.provider,
-                    code=code
-                )
-        except Verification.DoesNotExist:
+        code = kwargs.get('code')
+        params = {
+            'provider': self.provider
+        }
+        if not self.provider == Verification.PROVIDER_BING:
+            params['code'] = code
+        if use_subdomains:
+            params['subdomain'] = getattr(self.request, 'subdomain', '')
+        verification = Verification.objects.filter(**params).first()
+        if not verification:
             raise Http404
         provider_name = verification.get_provider_display().lower()
         context['%s_verification' % provider_name] = verification.code
