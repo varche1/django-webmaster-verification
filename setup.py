@@ -32,4 +32,11 @@ setup(
         "Django >= 1.4",
     ],
     zip_safe = True,
+    package_data={
+        'webmaster_verification', [
+            'templates/webmaster_verification/*.html',
+            'locale/*/*/*.mo',
+            'locale/*/*/*.po',
+        ]
+    }
 )
