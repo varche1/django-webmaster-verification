@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "django-webmaster-verification",
-    version = "0.2.5",
+    version = "0.3wf",
     packages = find_packages(),
 
     author = "Nicolas Kuttler",
@@ -21,7 +21,6 @@ setup(
         "Programming Language :: Python",
         "Framework :: Django",
         "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.2",
@@ -29,7 +28,14 @@ setup(
         "Programming Language :: Python :: 3.4",
     ],
     install_requires = [
-        "Django >= 1.4",
+        "Django >= 1.6",
     ],
     zip_safe = True,
+    package_data={
+        'webmaster_verification': [
+            'templates/webmaster_verification/*.html',
+            'locale/*/*/*.mo',
+            'locale/*/*/*.po',
+        ]
+    }
 )

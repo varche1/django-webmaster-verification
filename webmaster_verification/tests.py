@@ -1,103 +1,137 @@
-from django.conf import settings
-from django.core.urlresolvers import reverse
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.http import Http404
 from django.test import TestCase
-from django.test.client import Client
+from django.test.client import Client, RequestFactory
+from django.test.utils import override_settings
+from django.utils import timezone
+
+from .models import Verification
+from .views import YandexVerificationView, GoogleVerificationView
 
 
 class WebmasterVerificationTest(TestCase):
     def setUp(self):
         self.client = Client()
 
-    def test_google_file_access_and_content(self):
-        if 'google' in settings.WEBMASTER_VERIFICATION:
-            codes = settings.WEBMASTER_VERIFICATION['google']
-            if type(codes) == tuple:
-                for code in codes:
-                    self._test_google_file_access_and_content(code)
-            else:
-                self._test_google_file_access_and_content(codes)
+    def _get_google_url(self, code):
+        return '/google%s.html' % code
 
-    def _test_google_file_access_and_content(self, code):
-        """
-        Test if the google verification file for a specific code exists and
-        if it's content is correct.
-        """
+    def test_google(self):
+        code = '0123456789abcdef'
+        Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_GOOGLE
+        )
         url = self._get_google_url(code)
-        r = self.client.get(url)
+        response = self.client.get(url)
         self.assertEqual(
-            r.status_code,
+            response.status_code,
             200,
-            "Couldn't access %s, got %d" % (url, r.status_code)
+            "Couldn't access %s, got %d" % (url, response.status_code)
         )
         self.assertRegexpMatches(
-            str(r.content),
+            str(response.content),
             '.*google%s\.html.*' % code,
             'Verification code not found in response body',
         )
 
-    def test_google_file_404s(self):
         bad_codes = (
             '',
             '012345678',
-            '0123456789abcdef',
         )
         for code in bad_codes:
             url = self._get_google_url(code)
-            r = self.client.get(url)
+            response = self.client.get(url)
             self.assertEqual(
-                r.status_code,
+                response.status_code,
                 404,
-                "Could access %s for inexistent code, got %d" % (url, r.status_code)
+                "Could access %s for inexistent code, got %d" % (url, response.status_code)
             )
 
-    def _get_google_url(self, code):
-        return '/google%s.html' % code
-
-    def test_bing_file_access_and_content(self):
-        if 'bing' in settings.WEBMASTER_VERIFICATION:
-            code = settings.WEBMASTER_VERIFICATION['bing']
-            url = '/BingSiteAuth.xml'
-            r = self.client.get(url)
-            self.assertEqual(
-                r.status_code,
-                200,
-                "Couldn't access %s, got %d" % (url, r.status_code)
-            )
-            self.assertEqual(
-                r['Content-Type'],
-                'text/xml',
-                "Got %s content type for xml file" % r['Content-Type']
-            )
-            self.assertRegexpMatches(
-                str(r.content),
-                '.*%s.*' % code,
-                'Verification code not found in response body',
-            )
-
-    def test_mj_file_access(self):
-        if 'majestic' in settings.WEBMASTER_VERIFICATION:
-            codes = settings.WEBMASTER_VERIFICATION['majestic']
-            if type(codes) == tuple:
-                for code in codes:
-                    self._test_mj_file_access(code)
-            else:
-                self._test_mj_file_access(codes)
-
-    def _test_mj_file_access(self, code):
-        url = self._get_mj_url(code)
-        r = self.client.get(url)
+    def test_bing(self):
+        code = 'FFFFFFFFFFFFFFFF'
+        Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_BING
+        )
+        url = '/BingSiteAuth.xml'
+        response = self.client.get(url)
         self.assertEqual(
-            r.status_code,
+            response.status_code,
             200,
-            "Couldn't access %s, got %d" % (url, r.status_code)
+            "Couldn't access %s, got %d" % (url, response.status_code)
         )
         self.assertEqual(
-            r['Content-Type'],
-            'text/plain',
-            "Got %s content type for text file" % r['Content-Type']
+            response['Content-Type'],
+            'text/xml',
+            'Got %s content type for xml file' % response['Content-Type']
+        )
+        self.assertRegexpMatches(
+            str(response.content),
+            '.*%s.*' % code,
+            'Verification code not found in response body',
         )
 
-    def test_mj_file_404s(self):
+    def _get_yandex_url(self, code):
+        return '/yandex_%s.html' % code
+
+    def test_yandex(self):
+        code = '0123456789abcdef'
+        Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_YANDEX
+        )
+        url = self._get_yandex_url(code)
+        response = self.client.get(url)
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Couldn't access %s, got %d" % (url, response.status_code)
+        )
+        self.assertEqual(
+            response['Content-Type'],
+            'text/plain',
+            'Got %s content type for text file' % response['Content-Type']
+        )
+
+        bad_codes = (
+            '',
+            '012345678',
+            '0123456789ABCDEF0123456789ABCDEF',
+        )
+        for code in bad_codes:
+            url = self._get_yandex_url(code)
+            response = self.client.get(url)
+            self.assertEqual(
+                response.status_code,
+                404,
+                'Could access %s for inexistent code, got %d' % (url, response.status_code)
+            )
+
+    def _get_mj_url(self, code):
+        return '/MJ12_%s.txt' % code
+
+    def test_majestic(self):
+        code = 'AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAF'
+        Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_MAJESTIC
+        )
+        url = self._get_mj_url(code)
+        response = self.client.get(url)
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Couldn't access %s, got %d" % (url, response.status_code)
+        )
+        self.assertEqual(
+            response['Content-Type'],
+            'text/plain',
+            'Got %s content type for text file' % response['Content-Type']
+        )
+
         bad_codes = (
             '',
             '012345678',
@@ -109,79 +143,26 @@ class WebmasterVerificationTest(TestCase):
             self.assertEqual(
                 r.status_code,
                 404,
-                "Could access %s for inexistent code, got %d" % (url, r.status_code)
+                'Could access %s for inexistent code, got %d' % (url, r.status_code)
             )
 
-    def _get_mj_url(self, code):
-        return '/MJ12_%s.txt' % code
+    def _get_alexa_url(self, code):
+        return '/%s.html' % code
 
-    # TODO look into refactoring this
-    def test_yandex_file_acces(self):
-        if 'yandex' in settings.WEBMASTER_VERIFICATION:
-            codes = settings.WEBMASTER_VERIFICATION['yandex']
-            if type(codes) == tuple:
-                for code in codes:
-                    self._test_yandex_file_access(code)
-            else:
-                self._test_yandex_file_access(codes)
-
-    # TODO look into refactoring this
-    def _test_yandex_file_access(self, code):
-        url = self._get_yandex_url(code)
-        r = self.client.get(url)
-        self.assertEqual(
-            r.status_code,
-            200,
-            "Couldn't access %s, got %d" % (url, r.status_code)
+    def test_alexa(self):
+        code = '1234567890abcdefABCDEF12345'
+        Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_ALEXA
         )
-        self.assertEqual(
-            r['Content-Type'],
-            'text/plain',
-            "Got %s content type for text file" % r['Content-Type']
-        )
-
-    # TODO look into refactoring this
-    def test_yandex_file_404s(self):
-        bad_codes = (
-            '',
-            '012345678',
-            '0123456789ABCDEF0123456789ABCDEF',
-        )
-        for code in bad_codes:
-            url = self._get_yandex_url(code)
-            r = self.client.get(url)
-            self.assertEqual(
-                r.status_code,
-                404,
-                "Could access %s for inexistent code, got %d" % (url, r.status_code)
-            )
-
-    # TODO look into refactoring this
-    def _get_yandex_url(self, code):
-        return '/yandex_%s.html' % code
-
-    # TODO look into refactoring this
-    def test_alexa_file_acces(self):
-        if 'alexa' in settings.WEBMASTER_VERIFICATION:
-            codes = settings.WEBMASTER_VERIFICATION['alexa']
-            if type(codes) == tuple:
-                for code in codes:
-                    self._test_alexa_file_access(code)
-            else:
-                self._test_alexa_file_access(codes)
-
-    # TODO look into refactoring this
-    def _test_alexa_file_access(self, code):
         url = self._get_alexa_url(code)
-        r = self.client.get(url)
+        response = self.client.get(url)
         self.assertEqual(
-            r.status_code,
+            response.status_code,
             200,
-            "Couldn't access %s, got %d" % (url, r.status_code)
+            "Couldn't access %s, got %d" % (url, response.status_code)
         )
 
-    # TODO look into refactoring this
-    def test_alexa_file_404s(self):
         bad_codes = (
             '',
             '012345678',
@@ -193,9 +174,77 @@ class WebmasterVerificationTest(TestCase):
             self.assertEqual(
                 r.status_code,
                 404,
-                "Could access %s for inexistent code, got %d" % (url, r.status_code)
+                'Could access %s for inexistent code, got %d' % (url, r.status_code)
             )
 
-    # TODO look into refactoring this
-    def _get_alexa_url(self, code):
-        return '/%s.html' % code
+    @override_settings(WEBMASTER_VERIFICATION_USE_SUBDOMAINS=True)
+    def test_subdomains(self):
+        code = '0123456789abcdef'
+        Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_YANDEX,
+            subdomain='msk'
+        )
+        url = self._get_yandex_url(code)
+        request_factory = RequestFactory()
+        request = request_factory.get(url)
+
+        def do_request():
+            return YandexVerificationView.as_view()(request, code=code)
+
+        self.assertRaises(Http404, do_request)
+
+        request.subdomain = 'msk'
+        setattr(request, 'subdomain', 'msk')
+        response = do_request()
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Couldn't access %s, got %d" % (url, response.status_code)
+        )
+
+    @override_settings(WEBMASTER_VERIFICATION_USE_CACHE=True)
+    def test_cache(self):
+        code = '0123456789abcdef'
+        verification = Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_GOOGLE
+        )
+        url = self._get_google_url(code)
+        request_factory = RequestFactory()
+        request = request_factory.get(url)
+        view_instance = GoogleVerificationView()
+        view = GoogleVerificationView.as_view()
+
+        # getting from database, cache value
+        response = view(request, code=code)
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Couldn't access %s, got %d" % (url, response.status_code)
+        )
+        response = response.render()
+        self.assertIn(code, response.content.decode('utf-8'))
+        cache_key = 'google_%s' % code
+        self.assertIn(cache_key, view_instance._cache)
+        self.assertIn('code', view_instance._cache[cache_key])
+        self.assertIn('expire', view_instance._cache[cache_key])
+        self.assertEqual(view_instance._cache[cache_key]['code'], code)
+
+        # getting from cache
+        changed_code = 'abcdef0123456789'
+        verification.code = changed_code
+        verification.save()
+        response = view(request, code=code)
+        response = response.render()
+        self.assertIn(code, response.content.decode('utf-8'))
+
+        # cache was expired
+        view_instance._cache[cache_key]['expire'] = timezone.datetime.now() - timezone.timedelta(minutes=7)
+        self.assertRaises(Http404, view, request, code=code)
+        response = view(request, code=changed_code)
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Couldn't access %s, got %d" % (url, response.status_code)
+        )
