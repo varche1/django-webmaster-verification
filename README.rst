@@ -64,6 +64,10 @@ modify the app.
 Changelog
 =========
 
+0.3.1wf (2016-09-27)
+--------------------
+- Correct verification template for Yandex
+
 0.3wf (2016-09-23)
 ------------------
 - Store verification codes in database

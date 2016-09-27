@@ -92,7 +92,7 @@ class WebmasterVerificationTest(TestCase):
         )
         self.assertEqual(
             response['Content-Type'],
-            'text/plain',
+            'text/html; charset=utf-8',
             'Got %s content type for text file' % response['Content-Type']
         )
 

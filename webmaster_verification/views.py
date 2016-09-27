@@ -131,8 +131,8 @@ class MajesticVerificationView(MimeTextMixin, VerificationView):
     provider = Verification.PROVIDER_MAJESTIC
 
 
-class YandexVerificationView(MimeTextMixin, VerificationView):
-    template_name = 'webmaster_verification/yandex_verify_template.txt'
+class YandexVerificationView(VerificationView):
+    template_name = 'webmaster_verification/yandex_verify_template.html'
     provider = Verification.PROVIDER_YANDEX
 
 
