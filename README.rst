@@ -13,6 +13,8 @@ Supported services:
 - `Google Webmaster Tools <https://www.google.com/webmasters/tools/home>`_
 - `Bing Webmaster Tools <https://ssl.bing.com/webmaster/Home/>`_
 - `Yandex Webmaster Tools <http://webmaster.yandex.com/>`_
+- `Mail.ru Webmaster Tools <http://webmaster.mail.ru/>`_
+- `Mail.ru Seosan Tools <https://seosan.mail.ru/>`_
 - `Majestic SEO <https://www.majesticseo.com>`_
 - `Alexa <http://www.alexa.com>`_
 
@@ -63,6 +65,10 @@ modify the app.
 
 Changelog
 =========
+
+0.4wf (2016-10-04)
+------------------
+- Add support of Mail.Ru services
 
 0.3.1wf (2016-09-27)
 --------------------

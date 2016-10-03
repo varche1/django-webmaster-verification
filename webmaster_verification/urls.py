@@ -1,11 +1,10 @@
 from django.conf.urls import patterns
 from django.conf.urls import url
 
-from .views import GoogleVerificationView
-from .views import BingVerificationView
-from .views import MajesticVerificationView
-from .views import YandexVerificationView
-from .views import AlexaVerificationView
+from .views import (
+    GoogleVerificationView, BingVerificationView, MajesticVerificationView, YandexVerificationView,
+    AlexaVerificationView, WebmasterMailRuVerificationView, SeosanMailRuVerificationView
+)
 
 
 urlpatterns = patterns('',
@@ -28,6 +27,16 @@ urlpatterns = patterns('',
         r'^yandex_(?P<code>[0-9a-f]{16})\.html$',
         YandexVerificationView.as_view(),
         name='yandex_verify'
+    ),
+    url(
+        r'^wmail_(?P<code>[0-9a-f]{32})\.html$',
+        WebmasterMailRuVerificationView.as_view(),
+        name='webmaster_mailru_verify'
+    ),
+    url(
+        r'^mailru-verification(?P<code>[0-9a-f]{16})\.html$',
+        SeosanMailRuVerificationView.as_view(),
+        name='seosan_mailru_verify'
     ),
     url(
         r'^(?P<code>[0-9a-zA-Z]{27})\.html$',

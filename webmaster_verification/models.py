@@ -13,6 +13,8 @@ class Verification(models.Model):
     PROVIDER_YANDEX = 3
     PROVIDER_MAJESTIC = 4
     PROVIDER_ALEXA = 5
+    PROVIDER_WEBMASTER_MAILRU = 6
+    PROVIDER_SEOSAN_MAILRU = 7
 
     PROVIDERS = (
         (PROVIDER_GOOGLE, 'Google'),
@@ -20,6 +22,8 @@ class Verification(models.Model):
         (PROVIDER_YANDEX, 'Yandex'),
         (PROVIDER_MAJESTIC, 'Majestic'),
         (PROVIDER_ALEXA, 'Alexa'),
+        (PROVIDER_WEBMASTER_MAILRU, 'Webmaster Mail.Ru'),
+        (PROVIDER_SEOSAN_MAILRU, 'Seosan Mail.Ru'),
     )
 
     code = models.CharField(_('Code'), max_length=250)
