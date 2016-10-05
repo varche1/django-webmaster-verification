@@ -110,6 +110,89 @@ class WebmasterVerificationTest(TestCase):
                 'Could access %s for inexistent code, got %d' % (url, response.status_code)
             )
 
+    def _get_webmaster_mailru(self, code):
+        return '/wmail_%s.html' % code
+
+    def test_webmaster_mailru(self):
+        code = '0123456789abcdef0123456789abcdef'
+        Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_WEBMASTER_MAILRU
+        )
+        url = self._get_webmaster_mailru(code)
+        response = self.client.get(url)
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Couldn't access %s, got %d" % (url, response.status_code)
+        )
+        self.assertEqual(
+            response['Content-Type'],
+            'text/html; charset=utf-8',
+            'Got %s content type for text file' % response['Content-Type']
+        )
+        self.assertRegexpMatches(
+            str(response.content),
+            '.*%s.*' % code,
+            'Verification code not found in response body',
+        )
+
+        bad_codes = (
+            '',
+            '012345678',
+            '0123456789abcdef',
+        )
+        for code in bad_codes:
+            url = self._get_webmaster_mailru(code)
+            response = self.client.get(url)
+            self.assertEqual(
+                response.status_code,
+                404,
+                'Could access %s for inexistent code, got %d' % (url, response.status_code)
+            )
+
+    def _get_seosan_mailru(self, code):
+        return '/mailru-verification%s.html' % code
+
+    def test_seosan_mailru(self):
+        code = '0123456789abcdef'
+        Verification.objects.create(
+            code=code,
+            provider=Verification.PROVIDER_SEOSAN_MAILRU
+        )
+        url = self._get_seosan_mailru(code)
+        response = self.client.get(url)
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Couldn't access %s, got %d" % (url, response.status_code)
+        )
+        self.assertEqual(
+            response['Content-Type'],
+            'text/html; charset=utf-8',
+            'Got %s content type for text file' % response['Content-Type']
+        )
+        self.assertRegexpMatches(
+            str(response.content),
+            '.*%s.*' % code,
+            'Verification code not found in response body',
+        )
+
+        bad_codes = (
+            '',
+            '012345678',
+            'abcdef0123456789',
+            '0123456789abcdef9876543210fedcba',
+        )
+        for code in bad_codes:
+            url = self._get_seosan_mailru(code)
+            response = self.client.get(url)
+            self.assertEqual(
+                response.status_code,
+                404,
+                'Could access %s for inexistent code, got %d' % (url, response.status_code)
+            )
+
     def _get_mj_url(self, code):
         return '/MJ12_%s.txt' % code
 

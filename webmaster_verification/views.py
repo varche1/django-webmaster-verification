@@ -102,7 +102,6 @@ class VerificationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(VerificationView, self).get_context_data(**kwargs)
         use_subdomains = getattr(settings, 'WEBMASTER_VERIFICATION_USE_SUBDOMAINS', False)
-        provider_name = self.get_provider_name(self.provider)
         code = kwargs.get('code')
         params = {
             'provider': self.provider
@@ -112,7 +111,7 @@ class VerificationView(TemplateView):
         if use_subdomains:
             params['subdomain'] = getattr(self.request, 'subdomain', '')
         verification_code = self.get_verification_code(**params)
-        context['%s_verification' % provider_name] = verification_code
+        context['verification_code'] = verification_code
         return context
 
 
@@ -134,6 +133,16 @@ class MajesticVerificationView(MimeTextMixin, VerificationView):
 class YandexVerificationView(VerificationView):
     template_name = 'webmaster_verification/yandex_verify_template.html'
     provider = Verification.PROVIDER_YANDEX
+
+
+class WebmasterMailRuVerificationView(VerificationView):
+    template_name = 'webmaster_verification/webmaster_mailru_verify_template.html'
+    provider = Verification.PROVIDER_WEBMASTER_MAILRU
+
+
+class SeosanMailRuVerificationView(VerificationView):
+    template_name = 'webmaster_verification/seosan_mailru_verify_template.html'
+    provider = Verification.PROVIDER_SEOSAN_MAILRU
 
 
 class AlexaVerificationView(VerificationView):
