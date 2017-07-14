@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "django-webmaster-verification",
-    version = "0.4wf",
+    version = "0.4.1wf",
     packages = find_packages(),
 
     author = "Nicolas Kuttler",
