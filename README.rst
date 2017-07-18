@@ -66,6 +66,11 @@ modify the app.
 Changelog
 =========
 
+0.4.1wf (2017-07-17)
+--------------------
+- Add support of Django 1.10
+- Drop support of old Django versions
+
 0.4wf (2016-10-04)
 ------------------
 - Add support of Mail.Ru services

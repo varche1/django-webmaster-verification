@@ -1,4 +1,3 @@
-from django.conf.urls import patterns
 from django.conf.urls import url
 
 from .views import (
@@ -7,7 +6,7 @@ from .views import (
 )
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(
         r'^google(?P<code>[0-9a-f]{16})\.html$',
         GoogleVerificationView.as_view(),
@@ -43,4 +42,4 @@ urlpatterns = patterns('',
         AlexaVerificationView.as_view(),
         name='alexa_verify'
     ),
-)
+]
