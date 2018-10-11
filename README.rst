@@ -66,6 +66,10 @@ modify the app.
 Changelog
 =========
 
+0.4.1+whyfly.1 (2018-10-11)
+---------------------------
+- Better package version 
+
 0.4.1wf (2017-07-17)
 --------------------
 - Add support of Django 1.10
