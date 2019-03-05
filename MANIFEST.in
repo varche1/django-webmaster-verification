@@ -1,3 +1,4 @@
 include README.rst
 include LICENSE
 recursive-include webmaster_verification/templates *
+recursive-include webmaster_verification/locale *

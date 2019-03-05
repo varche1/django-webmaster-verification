@@ -1,16 +1,42 @@
-from setuptools import setup, find_packages
+import os
+from setuptools import setup
+
+def get_packages(package):
+    """
+    Return root package and all sub-packages.
+    """
+    return [dirpath
+            for dirpath, dirnames, filenames in os.walk(package)
+            if os.path.exists(os.path.join(dirpath, '__init__.py'))]
+
+
+def get_package_data(package):
+    """
+    Return all files under the root package, that are not in a
+    package themselves.
+    """
+    walk = [(dirpath.replace(package + os.sep, '', 1), filenames)
+            for dirpath, dirnames, filenames in os.walk(package)
+            if not os.path.exists(os.path.join(dirpath, '__init__.py'))]
+
+    filepaths = []
+    for base, filenames in walk:
+        filepaths.extend([os.path.join(base, filename)
+                          for filename in filenames])
+    return {package: filepaths}
+
 
 setup(
     name = "django-webmaster-verification",
-    version = "0.4.1+whyfly.1",
-    packages = find_packages(),
-
+    version = "0.4.1+whyfly.2",
+    packages=get_packages('webmaster_verification'),
+    package_data=get_package_data('webmaster_verification'),
     author = "Nicolas Kuttler",
     author_email = "pypi@kuttler.eu",
     description = "Webmaster tools verification for Django",
     long_description = open("README.rst").read(),
     license = "BSD",
-    url = "http://github.com/nkuttler/django-webmaster-verification",
+    url = "http://github.com/whyfly/django-webmaster-verification",
     include_package_data = True,
     classifiers = [
         "Development Status :: 5 - Production/Stable",
@@ -20,22 +46,12 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Framework :: Django",
-        "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.2",
-        "Programming Language :: Python :: 3.3",
-        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
     ],
     install_requires = [
-        "Django >= 1.6",
+        "Django >= 1.8",
     ],
     zip_safe = True,
-    package_data={
-        'webmaster_verification': [
-            'templates/webmaster_verification/*.html',
-            'locale/*/*/*.mo',
-            'locale/*/*/*.po',
-        ]
-    }
 )

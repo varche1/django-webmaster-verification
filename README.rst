@@ -2,7 +2,7 @@
 README
 ======
 
-This application allows various webmaster tools to verify that a django site is
+This application allows various webmaster tools to verify that a Django site is
 managed by you.
 
 The only supported method of verification is by accessing a file on your
@@ -38,11 +38,11 @@ Add ``webmaster_verification`` to your INSTALLED_APPS in settings.py::
 
 Add ``webmaster_verification`` to your root urlconf (urls.py)::
 
-    urlpatterns = patterns('',
+    urlpatterns = [
         ...,
         url(r'', include('webmaster_verification.urls')),
         ...,
-    )
+    ]
 
 Add optional settings::
 
@@ -66,28 +66,25 @@ modify the app.
 Changelog
 =========
 
-0.4.1+whyfly.1 (2018-10-11)
+=======
+0.4.1+whyfly.2 (2019-03-05)
 ---------------------------
-- Better package version 
-
-0.4.1wf (2017-07-17)
---------------------
-- Add support of Django 1.10
-- Drop support of old Django versions
-
-0.4wf (2016-10-04)
-------------------
+- Better package version
 - Add support of Mail.Ru services
-
-0.3.1wf (2016-09-27)
---------------------
 - Correct verification template for Yandex
-
-0.3wf (2016-09-23)
-------------------
 - Store verification codes in database
 - Add support of subdomains
-- Drop support of Python 2.6 and Django 1.4
+
+0.4.0 (2019-01-26)
+------------------
+- Use docker-based travis testing
+- Test against Django >=1.11
+- Removed tests for Python 3.4, add 3.6
+- I only ran the tests, I don't think I use it on any prod site right now
+
+0.3.0 (2016-02-20)
+------------------
+- Python 2.7 and Django 1.8 are required
 
 0.2.4 (2015-02-26)
 ------------------
