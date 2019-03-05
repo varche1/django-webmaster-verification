@@ -38,3 +38,6 @@ clean-venv: ## remove local venv
 
 coverage: .coverage
 	coverage html -d coverage
+
+release: sdist ## package and upload a release
+	twine upload dist/*
