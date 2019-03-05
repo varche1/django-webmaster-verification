@@ -1,6 +1,7 @@
 import os
 from setuptools import setup
 
+
 def get_packages(package):
     """
     Return root package and all sub-packages.
@@ -27,18 +28,18 @@ def get_package_data(package):
 
 
 setup(
-    name = "django-webmaster-verification",
-    version = "0.4.1+whyfly.2",
+    name="django-webmaster-verification",
+    version="0.4.1+whyfly.2",
     packages=get_packages('webmaster_verification'),
     package_data=get_package_data('webmaster_verification'),
-    author = "Nicolas Kuttler",
-    author_email = "pypi@kuttler.eu",
-    description = "Webmaster tools verification for Django",
-    long_description = open("README.rst").read(),
-    license = "BSD",
-    url = "http://github.com/whyfly/django-webmaster-verification",
-    include_package_data = True,
-    classifiers = [
+    author="Nicolas Kuttler",
+    author_email="pypi@kuttler.eu",
+    description="Webmaster tools verification for Django",
+    long_description=open("README.rst").read(),
+    license="BSD",
+    url="http://github.com/whyfly/django-webmaster-verification",
+    include_package_data=True,
+    classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
@@ -50,8 +51,8 @@ setup(
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
     ],
-    install_requires = [
+    install_requires=[
         "Django >= 1.8",
     ],
-    zip_safe = True,
+    zip_safe=True,
 )

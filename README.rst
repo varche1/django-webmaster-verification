@@ -66,7 +66,6 @@ modify the app.
 Changelog
 =========
 
-=======
 0.4.1+whyfly.2 (2019-03-05)
 ---------------------------
 - Better package version

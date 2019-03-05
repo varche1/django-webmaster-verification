@@ -2,6 +2,10 @@ test: clean-pyc clean
 	pipenv run python quicktest.py webmaster_verification
 	pipenv run python quicktest.py webmaster_verification --multicode
 
+test-travis:
+	python quicktest.py webmaster_verification
+	python quicktest.py webmaster_verification --multicode
+
 install:
 	pipenv run python setup.py install
 
