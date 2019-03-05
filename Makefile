@@ -1,22 +1,31 @@
-test:
-	python quicktest.py webmaster_verification
-	python quicktest.py webmaster_verification --multicode
+test: clean-pyc clean
+	pipenv run python quicktest.py webmaster_verification
+	pipenv run python quicktest.py webmaster_verification --multicode
 
 install:
-	python setup.py install
+	pipenv run python setup.py install
 
 build:
-	python setup.py build
+	pipenv run python setup.py build
 
 sdist:
-	python setup.py sdist
+	pipenv run python setup.py sdist
 
 upload:
-	python setup.py sdist upload
+	pipenv run python setup.py sdist upload
+
+clean-pyc: ## remove Python file artifacts
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -fr {} +
 
 clean:
 	rm -rf dist build *.egg-info django-webmaster-verification-*
 	rm -rf .coverage coverage
+
+clean-venv: ## remove local venv
+	rm -rf `pipenv --venv`
 
 .PHONY: .coverage
 .coverage:

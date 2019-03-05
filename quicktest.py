@@ -4,7 +4,6 @@ Slightly modified by Nicolas Kuttler.
 """
 
 import os
-import sys
 import argparse
 
 from django import setup
@@ -56,12 +55,21 @@ class QuickDjangoTest(object):
                 }
             },
 
-            INSTALLED_APPS=self.INSTALLED_APPS + tuple(self.apps),
-            WEBMASTER_VERIFICATION = self._get_wv_config(),
-            ROOT_URLCONF = 'test_project.urls',
-            TEMPLATE_DIRS = (
-                './test_project/templates/',
-            ),
+            INSTALLED_APPS=self.INSTALLED_APPS,
+            WEBMASTER_VERIFICATION=self._get_wv_config(),
+            ROOT_URLCONF='test_project.urls',
+            TEMPLATES=[
+                {
+                    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                    'APP_DIRS': True,
+                    'OPTIONS': {
+                        'debug': True,
+                        'context_processors': [
+                            'django.contrib.auth.context_processors.auth'
+                        ]
+                    }
+                },
+            ]
         )
 
         # Django 1.8
