@@ -14,7 +14,7 @@ install:
 build:
 	pipenv run python setup.py build
 
-sdist:
+sdist: clean
 	pipenv run python setup.py sdist
 
 upload:
