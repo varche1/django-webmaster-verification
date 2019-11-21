@@ -27,7 +27,7 @@ def get_package_data(package):
     return {package: filepaths}
 
 
-version = '0.4.1+whyfly.2'
+version = '0.4.1+whyfly.3'
 
 setup(
     name="django-webmaster-verification",
