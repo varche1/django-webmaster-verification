@@ -55,8 +55,6 @@ INSTALLED_APPS = (
     "django.contrib.messages",
     "django.contrib.sessions",
     "django.contrib.sites",
-    "django.contrib.flatpages",
-    "django.contrib.staticfiles",
     "webmaster_verification",
     "test_project",
 )
@@ -66,5 +64,4 @@ MIDDLEWARE = (
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "wfcore.middleware.StoreUtmMiddleware",
 )

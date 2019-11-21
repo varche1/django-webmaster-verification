@@ -50,3 +50,7 @@ release: sdist ## package and upload a release
 .PHONY: check-migrations
 check-migrations: ## check that all migrations are created
 	$(PRPM) makemigrations --check --dry-run
+
+.PHONY: check
+check: ## check
+	$(PRPM) check
