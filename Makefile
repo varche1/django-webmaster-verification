@@ -1,3 +1,5 @@
+PRPM := pipenv run python test_project/manage.py
+
 test: clean-pyc clean
 	pipenv run python quicktest.py webmaster_verification
 	pipenv run python quicktest.py webmaster_verification --multicode
@@ -31,6 +33,9 @@ clean:
 clean-venv: ## remove local venv
 	rm -rf `pipenv --venv`
 
+env-prepare: ## install environment
+	pipenv install --dev
+
 .PHONY: .coverage
 .coverage:
 	coverage run --source=webmaster_verification quicktest.py webmaster_verification
@@ -41,3 +46,7 @@ coverage: .coverage
 
 release: sdist ## package and upload a release
 	twine upload dist/*
+
+.PHONY: check-migrations
+check-migrations: ## check that all migrations are created
+	$(PRPM) makemigrations --check --dry-run
