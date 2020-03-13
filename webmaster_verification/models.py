@@ -2,11 +2,9 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.utils.six import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 
-@python_2_unicode_compatible
 class Verification(models.Model):
     PROVIDER_GOOGLE = 1
     PROVIDER_BING = 2
