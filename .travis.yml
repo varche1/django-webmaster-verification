@@ -1,16 +1,15 @@
 language: python
 sudo: False
 python:
-  - 2.7
-  - 3.5
   - 3.6
   - 3.7
+  - 3.8
 # Django releases
 env:
-  - DJANGO_VERSION="Django<2.0"
   - DJANGO_VERSION="Django<2.1"
   - DJANGO_VERSION="Django<2.2"
   - DJANGO_VERSION="Django<3"
+  - DJANGO_VERSION="Django<3.1"
 install:
   - pip install -q "${DJANGO_VERSION}"
   - python setup.py install -q
@@ -21,8 +20,3 @@ notifications:
     on_failure: change
 matrix:
   fast_finish: true
-  exclude:
-    - python: 2.7
-      env: DJANGO_VERSION="Django<2.1"
-    - python: 2.7
-      env: DJANGO_VERSION="Django<2.2"
