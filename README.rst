@@ -66,6 +66,10 @@ modify the app.
 Changelog
 =========
 
+0.4.1+whyfly.4 (2020-03-13)
+---------------------------
+- Django 2.2 support
+
 0.4.1+whyfly.2 (2019-03-05)
 ---------------------------
 - Better package version
