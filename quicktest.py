@@ -26,6 +26,7 @@ class QuickDjangoTest(object):
     INSTALLED_APPS = (
         'django.contrib.auth',
         'django.contrib.contenttypes',
+        "django.contrib.messages",
         'django.contrib.sessions',
         'django.contrib.admin',
 
@@ -65,11 +66,17 @@ class QuickDjangoTest(object):
                     'OPTIONS': {
                         'debug': True,
                         'context_processors': [
-                            'django.contrib.auth.context_processors.auth'
+                            'django.contrib.auth.context_processors.auth',
+                            "django.contrib.messages.context_processors.messages",
                         ]
                     }
                 },
-            ]
+            ],
+            MIDDLEWARE=(
+                "django.contrib.sessions.middleware.SessionMiddleware",
+                "django.contrib.auth.middleware.AuthenticationMiddleware",
+                "django.contrib.messages.middleware.MessageMiddleware",
+            )
         )
 
         # Django 1.8
