@@ -1,19 +1,35 @@
 language: python
-sudo: False
-python:
-  - 3.6
-  - 3.7
-  - 3.8
-# Django releases
-env:
-  - DJANGO_VERSION="Django<2.1"
-  - DJANGO_VERSION="Django<2.2"
-  - DJANGO_VERSION="Django<3"
-  - DJANGO_VERSION="Django<3.1"
-install:
-  - pip install -q "${DJANGO_VERSION}"
-  - python setup.py install -q
-script: make test-travis
+matrix:
+  include:
+    - python: 3.6
+      env: TOXENV=py36-django111
+    - python: 3.6
+      env: TOXENV=py36-django22
+    - python: 3.6
+      env: TOXENV=py36-django31
+    - python: 3.6
+      env: TOXENV=py36-django32
+    - python: 3.7
+      env: TOXENV=py37-django111
+    - python: 3.7
+      env: TOXENV=py37-django22
+    - python: 3.7
+      env: TOXENV=py37-django31
+    - python: 3.7
+      env: TOXENV=py37-django32
+    - python: 3.8
+      env: TOXENV=py38-django111
+    - python: 3.8
+      env: TOXENV=py38-django22
+    - python: 3.8
+      env: TOXENV=py38-django31
+    - python: 3.8
+      env: TOXENV=py38-django32
+
+before_install:
+  - sudo pip install tox
+script:
+  - tox -e $TOXENV
 notifications:
   email:
     on_success: never
