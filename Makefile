@@ -8,6 +8,9 @@ test-travis:
 	python quicktest.py webmaster_verification
 	python quicktest.py webmaster_verification --multicode
 
+test-all:
+	pipenv run tox
+
 install:
 	pipenv run python setup.py install
 
