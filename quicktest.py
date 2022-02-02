@@ -3,8 +3,8 @@ Source: http://datadesk.latimes.com/posts/2012/06/test-your-django-app-with-trav
 Slightly modified by Nicolas Kuttler.
 """
 
-import os
 import argparse
+import os
 
 from django import setup
 from django.conf import settings
@@ -45,6 +45,7 @@ class QuickDjangoTest(object):
         """
         settings.configure(
             DEBUG=True,
+            SECRET_KEY="1",
             DATABASES={
                 'default': {
                     'ENGINE': 'django.db.backends.sqlite3',
@@ -55,6 +56,7 @@ class QuickDjangoTest(object):
                     'PORT': '',
                 }
             },
+            DEFAULT_AUTO_FIELD="django.db.models.BigAutoField",
 
             INSTALLED_APPS=self.INSTALLED_APPS,
             WEBMASTER_VERIFICATION=self._get_wv_config(),
